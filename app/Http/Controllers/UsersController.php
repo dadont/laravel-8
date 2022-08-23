@@ -10,7 +10,7 @@ class UsersController extends Controller
 
     public function index()
     {
-        $users = User::get();
+        $users = User::paginate(10);
         return view('index', compact ('users'));
     }
 
@@ -22,7 +22,7 @@ class UsersController extends Controller
     public function store(UserRequest $request)
     {
        User::create($request->only(['name', 'email']));
-       return redirect()->route('users.index');
+       return redirect()->route('users.index')->withSuccess('Created user '.$request->name);;
     }
 
 
@@ -41,13 +41,13 @@ class UsersController extends Controller
     public function update(UserRequest $request, User $user)
     {
         $user->update($request->only(['name', 'email']));
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')->withSuccess('Updating user '.$user->name);
     }
 
 
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')->withDanger('Deleted user '.$user->name);
     }
 }
